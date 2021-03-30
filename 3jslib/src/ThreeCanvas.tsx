@@ -2,11 +2,12 @@ import React from 'react';
 import * as THREE from 'three'
 import './ThreeCanvas.css';
 import { Action } from './Utils/functions';
+import { ThreeProject } from './ThreeTools/functionBuilder'
 
 
 
 type CanvasArgs = {
-    RendererFunc:Action<THREE.WebGLRenderer>;
+    project:ThreeProject;
 }
 
 export default class ThreeCanvas extends React.Component<CanvasArgs>{
@@ -62,19 +63,14 @@ export default class ThreeCanvas extends React.Component<CanvasArgs>{
 
         const renderer = new THREE.WebGLRenderer({ preserveDrawingBuffer:true });
         const canvas = renderer.domElement;
-        //renderer.setSize( window.innerWidth, window.innerHeight );
-        if( this.canvasHolder ) {
-        }
-        //renderer.setSize( this.canvasHolder?.offsetWidth || 0 + 200, this.canvasHolder?.offsetHeight || 0 + 200 )
         console.log( this.canvasHolder )
-        //renderer.setSize( 300, 400 )
         canvas.style.height = '100%'
         canvas.style.width = '100%'
         this.canvasHolder?.appendChild( canvas );
         renderer.setSize( canvas.clientWidth, canvas.clientHeight, false );
         //canvas = renderer.domElement;
 
-        this.props.RendererFunc( renderer );
+        this.props.project.render( renderer );
         
 
       }
