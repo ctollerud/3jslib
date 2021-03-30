@@ -53,7 +53,7 @@ class App extends React.Component
             Learn React
           </a>
         </header>
-        <ThreeCanvas RendererFunc={(x:THREE.WebGLRenderer) => functionBuilder.RotatingSquarePOC(x)}/>
+        <ThreeCanvas RendererFunc={functionBuilder.RotatingSquarePOC}/>
       </div>
     );
   }

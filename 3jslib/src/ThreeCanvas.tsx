@@ -18,9 +18,9 @@ export default class ThreeCanvas extends React.Component<CanvasArgs>{
     render(){
 
         return (
-            <div>
+            <div className="ThreeCanvas">
                 <button onClick={this.saveToPng.bind(this)}>Save to PNG</button>
-                <div ref={ref => this.canvasHolder = ref} />
+                <div className="ThreeCanvas.CanvasHolder" ref={ref => this.canvasHolder = ref} />
             </div>
         );
     }
@@ -61,10 +61,22 @@ export default class ThreeCanvas extends React.Component<CanvasArgs>{
     private init3js() {
 
         const renderer = new THREE.WebGLRenderer({ preserveDrawingBuffer:true });
-        this.canvasHolder?.appendChild( renderer.domElement );
-        this.canvasElement = renderer.domElement;
+        const canvas = renderer.domElement;
+        //renderer.setSize( window.innerWidth, window.innerHeight );
+        if( this.canvasHolder ) {
+        }
+        //renderer.setSize( this.canvasHolder?.offsetWidth || 0 + 200, this.canvasHolder?.offsetHeight || 0 + 200 )
+        console.log( this.canvasHolder )
+        //renderer.setSize( 300, 400 )
+        canvas.style.height = '100%'
+        canvas.style.width = '100%'
+        this.canvasHolder?.appendChild( canvas );
+        renderer.setSize( canvas.clientWidth, canvas.clientHeight, false );
+        //canvas = renderer.domElement;
 
         this.props.RendererFunc( renderer );
+        
+
       }
 
 }

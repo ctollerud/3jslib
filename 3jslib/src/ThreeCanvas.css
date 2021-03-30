@@ -1,3 +1,16 @@
 .ThreeCanvas-canvas {
-    max-width: 100%
+    width: 100%;
+    height: 100%;
+}
+
+.ThreeCanvas {
+    width: 100%;
+    height: 100%;
+}
+
+.ThreeCanvas.CanvasHolder {
+    width: 100%;
+    height: 100%;
+    background-color: bisque;
+    padding: 10px;
 }
