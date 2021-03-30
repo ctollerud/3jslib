@@ -1,8 +1,10 @@
 import React from 'react';
+import { isFunctionOrConstructorTypeNode } from 'typescript';
 import './App.css';
 import ThreeCanvas from './ThreeCanvas'
 
 import * as blah from './ThreeTools/functionBuilder'
+import * as functionBuilder from './ThreeTools/functionBuilder'
 
 
 
@@ -51,7 +53,7 @@ class App extends React.Component
             Learn React
           </a>
         </header>
-        <ThreeCanvas/>
+        <ThreeCanvas RendererFunc={(x:THREE.WebGLRenderer) => functionBuilder.RotatingSquarePOC(x)}/>
       </div>
     );
   }
