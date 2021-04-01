@@ -2,7 +2,7 @@ import React from 'react';
 import * as THREE from 'three'
 import './ThreeCanvas.css';
 import { Action } from './Utils/functions';
-import { ThreeProject } from './ThreeTools/functionBuilder'
+import { ThreeProject } from './ThreeTools/ThreeProject'
 
 
 

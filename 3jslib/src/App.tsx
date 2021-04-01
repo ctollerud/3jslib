@@ -1,10 +1,7 @@
 import React from 'react';
-import { isFunctionOrConstructorTypeNode } from 'typescript';
 import './App.css';
 import ThreeCanvas from './ThreeCanvas'
-
-import * as blah from './ThreeTools/functionBuilder'
-import * as functionBuilder from './ThreeTools/functionBuilder'
+import * as proj  from './Gallery/shaderExplorations'
 
 
 
@@ -39,21 +36,7 @@ class App extends React.Component
   render(){
     return (
       <div className="App">
-        <header className="App-header">
-          <button className="App-renderButton" onClick={this.click} >save</button>
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-        <ThreeCanvas project={functionBuilder.helloWorldCube}/>
+        <ThreeCanvas project={proj.default.handleCanvasResizing().build()}/>
       </div>
     );
   }
