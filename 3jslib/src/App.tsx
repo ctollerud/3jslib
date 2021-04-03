@@ -36,7 +36,7 @@ class App extends React.Component
   render(){
     return (
       <div className="App">
-        <ThreeCanvas project={proj.default.handleCanvasResizing().build()}/>
+        <ThreeCanvas project={proj.default}/>
       </div>
     );
   }

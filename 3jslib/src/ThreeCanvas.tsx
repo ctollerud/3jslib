@@ -61,7 +61,7 @@ export default class ThreeCanvas extends React.Component<CanvasArgs>{
 
     private init3js() {
 
-        const renderer = new THREE.WebGLRenderer({ preserveDrawingBuffer:true });
+        const renderer = new THREE.WebGLRenderer({ preserveDrawingBuffer:true, antialias: true });
         const canvas = renderer.domElement;
         console.log( this.canvasHolder )
         canvas.style.height = '100%'

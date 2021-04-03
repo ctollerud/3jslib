@@ -10,6 +10,9 @@ const helloWorldCube = ThreeProject.initialize( () => {
   const cube = new THREE.Mesh( geometry, material );
   scene.add( cube );
 
+
+  //const controls = new OrbitControls
+
   camera.position.z = 5;
   return {scene:scene, camera:camera, state:cube};
 } )

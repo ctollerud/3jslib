@@ -1,6 +1,8 @@
 import { Console } from 'node:console';
 import { runInContext } from 'node:vm';
 import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
 import { Action, Action2, Func0 } from '../Utils/functions';
 
 type ThreeProjectAction = Action<THREE.WebGLRenderer>;
@@ -69,18 +71,30 @@ class ThreeProjectBuilder<TState> {
     });
   }
 
-  animate( action:Action2<TState,number> ) {
+  animate( action:Action2<TState,number> | undefined ) {
     return new ThreeProjectBuilder<TState>( (renderer) => {
       const snapshot = this.func(renderer);
       const animate = function (t:number) {
         requestAnimationFrame( animate );
-        action(snapshot.state,t);
+        if ( action ) action(snapshot.state,t);
   
         renderer.render( snapshot.scene, snapshot.camera );
       };
       animate(0);
 
       return snapshot;
+
+    } )
+  }
+
+  includeOrbitControls( setup:Action<OrbitControls> | undefined = undefined ) {
+
+    return new ThreeProjectBuilder<TState>( (renderer) => {
+      const snapshot = this.func(renderer);
+      const controls = new OrbitControls( snapshot.camera, renderer.domElement )
+      if( setup ) setup( controls )
+
+      return snapshot
 
     } )
   }

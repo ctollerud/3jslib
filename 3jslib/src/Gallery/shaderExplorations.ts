@@ -27,9 +27,12 @@ const project =
     camera.position.z = 5;
     return {scene:scene, camera:camera, state:cube};
 } )
+.includeOrbitControls()
 .animate( (cube,t) => {
     cube.rotation.x +=0.01;
     cube.rotation.y +=0.01;
   } )
+.handleCanvasResizing()
+.build()
 
 export default project;
