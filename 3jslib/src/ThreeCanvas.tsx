@@ -4,10 +4,11 @@ import './ThreeCanvas.css';
 import { Action } from './Utils/functions';
 import { ThreeProject } from './ThreeTools/ThreeProject'
 
+type Dimensions = { width:number, height:number }
 
 
 type CanvasArgs = {
-    project:ThreeProject;
+    project:ThreeProject
 }
 
 export default class ThreeCanvas extends React.Component<CanvasArgs>{
@@ -58,16 +59,25 @@ export default class ThreeCanvas extends React.Component<CanvasArgs>{
     }
     
 
+    private [ width: ]
+
 
     private init3js() {
 
         const renderer = new THREE.WebGLRenderer({ preserveDrawingBuffer:true, antialias: true });
         const canvas = renderer.domElement;
-        console.log( this.canvasHolder )
+
+        const projectSize = this.props.project.projectSize;
+
+        if( canvas )
         canvas.style.height = '100%'
         canvas.style.width = '100%'
         this.canvasHolder?.appendChild( canvas );
-        renderer.setSize( canvas.clientWidth, canvas.clientHeight, false );
+
+        const initialWidth = canvas.clientWidth;
+        const calculatedHeight = this.props.project.aspectRatio ? (initialWidth/this.props.project.aspectRatio) : undefined;
+
+        renderer.setSize( canvas.clientWidth, calculatedHeight ?? canvas.clientHeight, false );
         //canvas = renderer.domElement;
 
         this.props.project.render( renderer );

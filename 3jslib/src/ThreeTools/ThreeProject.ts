@@ -5,6 +5,17 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 import { Action, Action2, Func0 } from '../Utils/functions';
 
+
+type FixedWidthAndHeight = { width:number, height:number }
+type FixedWidthAndAspectRatio = { width:number, aspectRatio:number }
+type FixedHeightAndAspectRatio = { width:number, aspectRatio:number }
+
+type FixedSize = FixedWidthAndHeight | FixedWidthAndAspectRatio | FixedHeightAndAspectRatio;
+type AspectRatio = { aspectRatio:number };
+
+type ThreeProjectSize = FixedSize | AspectRatio
+
+
 type ThreeProjectAction = Action<THREE.WebGLRenderer>;
 type ThreeSnapshot<TState> = {
   scene:THREE.Scene,
@@ -14,10 +25,9 @@ type ThreeSnapshot<TState> = {
 type ThreeProjectBuilderFunction<TState> = ( renderer:THREE.WebGLRenderer ) => ThreeSnapshot<TState>
 
 
-type ThreeStaticProject = Func0<[THREE.Scene,THREE.Camera]>
 
 class ThreeProject {
-  public constructor( private action:ThreeProjectAction ){}
+  public constructor( private action:ThreeProjectAction, public projectSize:ThreeProjectSize | undefined = undefined ){}
 
   public render:( ( renderer:THREE.WebGLRenderer )=>void) = (x) => this.action( x )
 
@@ -30,8 +40,8 @@ class ThreeProject {
 class ThreeProjectBuilder<TState> {
   private constructor( private func:ThreeProjectBuilderFunction<TState> ) {}
 
-  build():ThreeProject {
-    return new ThreeProject( x => this.func(x) )
+  build( projectSize:ThreeProjectSize | undefined = undefined ):ThreeProject {
+    return new ThreeProject( x => this.func(x), projectSize )
   }
 
   static initialize<TState>( func:Func0<ThreeSnapshot<TState>> ) {
@@ -40,7 +50,7 @@ class ThreeProjectBuilder<TState> {
 
   //Handle the canvas resizing by rejiggering the renderer.
   //Is a little janky, as it uses the window resize event as a bludgeon.
-  handleCanvasResizing() {
+  handleCanvasResizing( additionalAction:Action2<TState,{ width:number, height:number }> | undefined = undefined ) {
     return new ThreeProjectBuilder<TState>((renderer) => {
       const snapshot = this.func(renderer);
 
@@ -61,6 +71,9 @@ class ThreeProjectBuilder<TState> {
         snapshot.camera.aspect = renderer.domElement.width / renderer.domElement.height;
         snapshot.camera.updateProjectionMatrix();
         resizeRendererToDisplaySize();
+
+        if( additionalAction ) additionalAction( snapshot.state, { width:renderer.domElement.width, height:renderer.domElement.height } )
+
         renderer.render( snapshot.scene, snapshot.camera );
       };
       window.addEventListener( 'resize', handleResizing );
@@ -110,4 +123,4 @@ class ThreeProjectBuilder<TState> {
     
 }
 
-export { ThreeProject  };
+export type { ThreeProject };

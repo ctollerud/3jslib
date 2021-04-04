@@ -12,27 +12,50 @@ const project =
     ThreeProject.initialize( () => {
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-    const geometry = new THREE.PlaneBufferGeometry(6, 6);
+    const camera = new THREE.PerspectiveCamera( 75, 1000 / 1000, 0.1, 1000 );
+    const geometry = new THREE.PlaneBufferGeometry(1,1);
     //const material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
+
+    const uniforms = {
+        u_time: { type: "f", value: 1.0 },
+        u_resolution: { type: "v2", value: new THREE.Vector2() },
+        u_mouse: { type: "v2", value: new THREE.Vector2() }
+    };
 
     const material = new THREE.ShaderMaterial({
         fragmentShader: fragmentShader.default,
         vertexShader: vertexShader.default,
+        uniforms : uniforms
     })
 
-    const cube = new THREE.Mesh( geometry, material );
-    scene.add( cube );
+    const planeMesh = new THREE.Mesh( geometry, material );
+    scene.add( planeMesh );
     
-    camera.position.z = 5;
-    return {scene:scene, camera:camera, state:cube};
+    camera.position.z = 1;
+
+    const updateUniforms = () => {
+        requestAnimationFrame( updateUniforms );
+        uniforms.u_time.value += 0.05;
+    }
+
+    updateUniforms();
+
+    //TODO: incorporate mouse-move as well?
+    const handleResize = ( newX:number, newY:number ) => {
+        uniforms.u_resolution.value.x = newX;
+        uniforms.u_resolution.value.y = newY;
+    }
+
+
+
+    return {scene:scene, camera:camera, state:{ handleResize }};
 } )
 .includeOrbitControls()
-// .animate( (plane,t) => {
-//     plane.rotation.x +=0.01;
-//     plane.rotation.y +=0.01;
-//   } )
-.handleCanvasResizing()
-.build()
+.animate( (plane,t) => {
+    // plane.rotation.x +=0.01;
+    // plane.rotation.y +=0.01;
+  } )
+.handleCanvasResizing( ( state, newDimensions ) => state.handleResize( newDimensions.width, newDimensions.height ) )
+.build( { aspectRatio:1 } )
 
 export default project;
