@@ -59,15 +59,13 @@ export default class ThreeCanvas extends React.Component<CanvasArgs>{
     }
     
 
-    private [ width: ]
-
 
     private init3js() {
 
         const renderer = new THREE.WebGLRenderer({ preserveDrawingBuffer:true, antialias: true });
         const canvas = renderer.domElement;
 
-        const projectSize = this.props.project.projectSize;
+        const aspectRatio = this.props.project.aspectRatio;
 
         if( canvas )
         canvas.style.height = '100%'
@@ -75,6 +73,14 @@ export default class ThreeCanvas extends React.Component<CanvasArgs>{
         this.canvasHolder?.appendChild( canvas );
 
         const initialWidth = canvas.clientWidth;
+
+
+        // let x:number = aspectRatio;
+        // if( aspectRatio )
+        // {
+        //     const x = aspectRatio;
+        // }
+
         const calculatedHeight = this.props.project.aspectRatio ? (initialWidth/this.props.project.aspectRatio) : undefined;
 
         renderer.setSize( canvas.clientWidth, calculatedHeight ?? canvas.clientHeight, false );

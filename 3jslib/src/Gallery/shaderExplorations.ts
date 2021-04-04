@@ -48,14 +48,14 @@ const project =
 
 
 
-    return {scene:scene, camera:camera, state:{ handleResize }};
+    return {scene:scene, camera:camera, state:{ planeMesh, handleResize }};
 } )
 .includeOrbitControls()
-.animate( (plane,t) => {
-    // plane.rotation.x +=0.01;
-    // plane.rotation.y +=0.01;
+.animate( (state,t) => {
+     state.planeMesh.rotation.x +=0.01;
+     state.planeMesh.rotation.y +=0.01;
   } )
 .handleCanvasResizing( ( state, newDimensions ) => state.handleResize( newDimensions.width, newDimensions.height ) )
-.build( { aspectRatio:1 } )
+.buildWithAspectRatio( 1 )
 
 export default project;

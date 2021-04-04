@@ -27,7 +27,7 @@ type ThreeProjectBuilderFunction<TState> = ( renderer:THREE.WebGLRenderer ) => T
 
 
 class ThreeProject {
-  public constructor( private action:ThreeProjectAction, public projectSize:ThreeProjectSize | undefined = undefined ){}
+  public constructor( private action:ThreeProjectAction, public aspectRatio:number | undefined ){}
 
   public render:( ( renderer:THREE.WebGLRenderer )=>void) = (x) => this.action( x )
 
@@ -40,8 +40,8 @@ class ThreeProject {
 class ThreeProjectBuilder<TState> {
   private constructor( private func:ThreeProjectBuilderFunction<TState> ) {}
 
-  build( projectSize:ThreeProjectSize | undefined = undefined ):ThreeProject {
-    return new ThreeProject( x => this.func(x), projectSize )
+  buildWithAspectRatio( aspectRatio:number ):ThreeProject {
+    return new ThreeProject( x => this.func(x), aspectRatio )
   }
 
   static initialize<TState>( func:Func0<ThreeSnapshot<TState>> ) {
@@ -123,4 +123,4 @@ class ThreeProjectBuilder<TState> {
     
 }
 
-export type { ThreeProject };
+export { ThreeProject };

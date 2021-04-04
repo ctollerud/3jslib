@@ -22,6 +22,6 @@ const helloWorldCube = ThreeProject.initialize( () => {
   cube.rotation.y +=0.01;
 } )
 .handleCanvasResizing()
-.build();
+.buildWithAspectRatio( 1 );
 
 export {helloWorldCube};
