@@ -71,7 +71,7 @@ class ThreeProjectBuilder<TState> {
     });
   }
 
-  animate( action:Action2<TState,number> | undefined ) {
+  animate( action:Action2<TState,number> | undefined = undefined ) {
     return new ThreeProjectBuilder<TState>( (renderer) => {
       const snapshot = this.func(renderer);
       const animate = function (t:number) {

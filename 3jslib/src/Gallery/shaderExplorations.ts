@@ -13,7 +13,7 @@ const project =
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-    const geometry = new THREE.BoxGeometry();
+    const geometry = new THREE.PlaneBufferGeometry(6, 6);
     //const material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
 
     const material = new THREE.ShaderMaterial({
@@ -28,10 +28,10 @@ const project =
     return {scene:scene, camera:camera, state:cube};
 } )
 .includeOrbitControls()
-.animate( (cube,t) => {
-    cube.rotation.x +=0.01;
-    cube.rotation.y +=0.01;
-  } )
+// .animate( (plane,t) => {
+//     plane.rotation.x +=0.01;
+//     plane.rotation.y +=0.01;
+//   } )
 .handleCanvasResizing()
 .build()
 

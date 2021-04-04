@@ -10,15 +10,25 @@
 // #pragma glslify: pnoise4 = require(glsl-noise/periodic/4d)
 
 //attribute vec3 position;
+uniform vec2 u_resolution;
+uniform vec2 u_mouse;
+uniform float u_time;
 
+// Plot a line on Y using a value between 0.0-1.0
+float plot(vec2 st) {    
+    return smoothstep(0.02, 0.0, abs(st.y - st.x));
+}
 
 void main() {
-    vec4 vec = vec4(1,2,3,4);
+	vec2 st = gl_FragCoord.xy/u_resolution;
 
-    vec3 c = vec3(1.,1.,1.);
-    //int fortytwo = return42( c );
-    float noise = snoise3( vec3(1,1,1) );
+    float y = st.x;
 
-	//gl_FragColor = vec4(snoise3(vec3(gl_FragCoord.x, gl_FragCoord.y, gl_FragCoord.z)), 1.0);
-    gl_FragColor = vec4(1.,0.,0.,1.0);
+    vec3 color = vec3(y);
+
+    // Plot a line
+    float pct = plot(st);
+    color = (1.0-pct)*color+pct*vec3(0.0,1.0,0.0);
+
+	gl_FragColor = vec4(color,1.0);
 }
