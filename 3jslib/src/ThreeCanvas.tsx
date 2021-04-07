@@ -1,8 +1,9 @@
 import React from 'react';
 import * as THREE from 'three'
 import './ThreeCanvas.css';
-import { Action } from './Utils/functions';
+import { Action1 } from './Utils/functions';
 import { ThreeProject } from './ThreeTools/ThreeProject'
+import ExportCanvasForm from './ExportCanvasForm'
 
 type Dimensions = { width:number, height:number }
 
@@ -21,6 +22,7 @@ export default class ThreeCanvas extends React.Component<CanvasArgs>{
 
         return (
             <div className="ThreeCanvas">
+                <ExportCanvasForm render={ dimensions => console.log( `render a ${dimensions.width}X${dimensions.height} diagram...` ) } />
                 <button onClick={this.saveToPng.bind(this)}>Save to PNG</button>
                 <div className="ThreeCanvas.CanvasHolder" ref={ref => this.canvasHolder = ref} />
             </div>
@@ -67,7 +69,7 @@ export default class ThreeCanvas extends React.Component<CanvasArgs>{
 
         const aspectRatio = this.props.project.aspectRatio;
 
-        if( canvas )
+        //if( canvas )
         canvas.style.height = '100%'
         canvas.style.width = '100%'
         this.canvasHolder?.appendChild( canvas );

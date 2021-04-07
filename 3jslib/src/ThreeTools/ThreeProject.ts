@@ -3,7 +3,8 @@ import { runInContext } from 'node:vm';
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-import { Action, Action2, Func0 } from '../Utils/functions';
+//import { Action1, Action2, Func0 } from '../Utils/functions';
+import * as Functions from '../Utils/functions';
 
 
 type FixedWidthAndHeight = { width:number, height:number }
@@ -16,7 +17,7 @@ type AspectRatio = { aspectRatio:number };
 type ThreeProjectSize = FixedSize | AspectRatio
 
 
-type ThreeProjectAction = Action<THREE.WebGLRenderer>;
+type ThreeProjectAction = Functions.Action1<THREE.WebGLRenderer>;
 type ThreeSnapshot<TState> = {
   scene:THREE.Scene,
   camera:THREE.PerspectiveCamera,
@@ -31,7 +32,7 @@ class ThreeProject {
 
   public render:( ( renderer:THREE.WebGLRenderer )=>void) = (x) => this.action( x )
 
-  static initialize<TState>( func:Func0<ThreeSnapshot<TState>> ):ThreeProjectBuilder<TState> {
+  static initialize<TState>( func:Functions.Func0<ThreeSnapshot<TState>> ):ThreeProjectBuilder<TState> {
     return ThreeProjectBuilder.initialize<TState>(func);
   }
 
@@ -44,13 +45,13 @@ class ThreeProjectBuilder<TState> {
     return new ThreeProject( x => this.func(x), aspectRatio )
   }
 
-  static initialize<TState>( func:Func0<ThreeSnapshot<TState>> ) {
+  static initialize<TState>( func:Functions.Func0<ThreeSnapshot<TState>> ) {
     return new ThreeProjectBuilder<TState>( (x) => func() );
   }
 
   //Handle the canvas resizing by rejiggering the renderer.
   //Is a little janky, as it uses the window resize event as a bludgeon.
-  handleCanvasResizing( additionalAction:Action2<TState,{ width:number, height:number }> | undefined = undefined ) {
+  handleCanvasResizing( additionalAction:Functions.Action2<TState,{ width:number, height:number }> | undefined = undefined ) {
     return new ThreeProjectBuilder<TState>((renderer) => {
       const snapshot = this.func(renderer);
 
@@ -84,7 +85,7 @@ class ThreeProjectBuilder<TState> {
     });
   }
 
-  animate( action:Action2<TState,number> | undefined = undefined ) {
+  animate( action:Functions.Action2<TState,number> | undefined = undefined ) {
     return new ThreeProjectBuilder<TState>( (renderer) => {
       const snapshot = this.func(renderer);
       const animate = function (t:number) {
@@ -100,7 +101,7 @@ class ThreeProjectBuilder<TState> {
     } )
   }
 
-  includeOrbitControls( setup:Action<OrbitControls> | undefined = undefined ) {
+  includeOrbitControls( setup:Functions.Action1<OrbitControls> | undefined = undefined ) {
 
     return new ThreeProjectBuilder<TState>( (renderer) => {
       const snapshot = this.func(renderer);
