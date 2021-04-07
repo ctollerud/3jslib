@@ -1,8 +1,8 @@
 import React from 'react';
 import * as THREE from 'three'
 import './ThreeCanvas.css';
-import { Action1 } from './Utils/functions';
-import { ThreeProject } from './ThreeTools/ThreeProject'
+import { Action1 } from '../Utils/functions';
+import { ThreeProject } from '../ThreeTools/ThreeProject'
 import ExportCanvasForm from './ExportCanvasForm'
 
 type Dimensions = { width:number, height:number }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Action1, Action2 } from './Utils/functions'
+import { Action1, Action2 } from '../Utils/functions'
 
 //const action = functions.Action1
 
