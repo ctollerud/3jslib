@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+
+import TextInput from './TextInput'
 import { Action1, Action2 } from '../Utils/functions'
 
 //const action = functions.Action1
@@ -10,15 +12,19 @@ type propsType = {
 };
 
 function ExportCanvasForm( props:propsType ) {
-    const [ input1Text, setText ] = useState( '' );
-    const [ input2Text, setText2 ] = useState( '' );
+    const [ widthText, setWidthText ] = useState( '' );
+    const [ heightText, setHeightText ] = useState( '' );
 
     return (
         <> 
-            TODO: update the hook using the inputs
-            <div>Width: <input type="text" value={ input1Text } onChange={ (e) => setText( e.target.value ) } /></div>
-            <div>Height: <input type="text" value={ input2Text } onChange={ (e) => setText2( e.target.value ) } /></div>
-            <button onClick={ () => props.render({ width:Number(input1Text), height:Number(input2Text) }) } >Save</button>
+            <div>
+                <strong>Export</strong>
+                <div>Width: <TextInput value={ widthText } textChanged={ setWidthText } /></div>
+                <div>Height: <TextInput value={ heightText } textChanged={ setHeightText } /></div>
+                {/* <div>Width: <input type="text" value={ input1Text } onChange={ (e) => setText( e.target.value ) } /></div> */}
+                {/* <div>Height: <input type="text" value={ input2Text } onChange={ (e) => setText2( e.target.value ) } /></div> */}
+                <div><button onClick={ () => props.render({ width:Number(widthText), height:Number(heightText) }) } >Save</button></div>
+            </div>
         </>
     )
 }
