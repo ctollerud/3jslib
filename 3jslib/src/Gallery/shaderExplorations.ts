@@ -5,8 +5,8 @@ import * as  vertexShader from './vertexShader.glsl'
 import * as fragmentShader from './fragmentShader.glsl'
 
 
-console.log(vertexShader.default);
-console.log(fragmentShader.default);
+// console.log(vertexShader.default);
+// console.log(fragmentShader.default);
 
 const project = 
     ThreeProject.initialize( () => {
@@ -52,6 +52,7 @@ const project =
 } )
 .includeOrbitControls()
 .animate( (state,t) => {
+    console.log("frame");
      state.planeMesh.rotation.x +=0.01;
      state.planeMesh.rotation.y +=0.01;
   } )

@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import ThreeCanvas from './ThreeCanvas'
+import ThreeCanvas2 from './ThreeCanvas2'
 import * as proj  from '../Gallery/shaderExplorations'
 
 class App extends React.Component
@@ -14,7 +15,7 @@ class App extends React.Component
   render(){
     return (
       <div className="App">
-        <ThreeCanvas project={proj.default}/>
+        <ThreeCanvas2 project={proj.default}/>
       </div>
     );
   }

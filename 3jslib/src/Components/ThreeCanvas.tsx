@@ -25,6 +25,8 @@ export default class ThreeCanvas extends React.Component<CanvasArgs>{
                 <ExportCanvasForm render={ dimensions => console.log( `render a ${dimensions.width}X${dimensions.height} diagram...` ) } />
                 <button onClick={this.saveToPng.bind(this)}>Save to PNG</button>
                 <div className="ThreeCanvas.CanvasHolder" ref={ref => this.canvasHolder = ref} />
+
+                Some other text
             </div>
         );
     }
