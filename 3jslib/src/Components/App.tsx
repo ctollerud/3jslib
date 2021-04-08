@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import ThreeCanvas from './ThreeCanvas'
+//import ThreeCanvas from './ThreeCanvas'
 import ThreeCanvas2 from './ThreeCanvas2'
 import * as proj  from '../Gallery/shaderExplorations'
 
@@ -9,7 +9,6 @@ class App extends React.Component
 
   public constructor( props:any ){
     super( props );
-    //this.init3js()
   }
 
   render(){

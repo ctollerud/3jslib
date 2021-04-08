@@ -2,7 +2,10 @@ import React, { useState, useRef, useEffect } from 'react'
 import * as THREE from 'three';
 import { ThreeProject } from '../ThreeTools/ThreeProject';
 import ExportCanvasForm from './ExportCanvasForm'
+import CanvasExport from './CanvasExport'
 
+
+type BasicCamera =  THREE.PerspectiveCamera | THREE.OrthographicCamera;
 
 const triggerDownload = (imgURI:string) => {
     const evt = new MouseEvent('click', {
@@ -19,15 +22,22 @@ const triggerDownload = (imgURI:string) => {
     a.dispatchEvent(evt);
 }
 
-const saveToPng = ( canvas:HTMLCanvasElement | null ) => {
-
-    if( !canvas ) return;
-
+const saveToPng = ( canvas:HTMLCanvasElement ) => {
     var imgURI = canvas
     .toDataURL('image/png')
     .replace('image/png', 'image/octet-stream');
 
     triggerDownload(imgURI);
+}
+
+const renderPng = ( renderer:THREE.WebGLRenderer, scene:THREE.Scene, camera:BasicCamera, width:number, height:number ) => {
+    const tempCamera = camera.clone() as BasicCamera;
+    renderer.setSize( width, height, true );
+    tempCamera.updateProjectionMatrix();
+    renderer.render( scene, tempCamera );
+
+    saveToPng( renderer.domElement );
+
 }
 
 
@@ -38,72 +48,73 @@ type CanvasArgs = {
 export default function ThreeCanvas2( props:CanvasArgs ) {
 
     const canvasRef = useRef<HTMLCanvasElement>( null );
-    const canvasHolderRef = useRef<HTMLDivElement>( null );
-    const [renderer, setRenderer] = useState<THREE.WebGLRenderer | null>( null )
+    const exportCanvasRef = useRef<HTMLCanvasElement>( null );
+    const [renderer, setRenderer] = useState<THREE.WebGLRenderer | null>( null );
 
-    console.log( 'rendering...' );
+    const [camera, setCamera] = useState<BasicCamera | null>( null );
+    const [scene, setScene] = useState<THREE.Scene | null>( null );
+    const [exportRenderer, setExportRenderer] = useState<THREE.WebGLRenderer | null>( null );
+    const [aspectRatio, setAspectRatio] = useState<number | null>( null );
+
     const initializationEffect = renderer ? () => {} : () => {
         const canvas = canvasRef.current
-        const canvasHolder = canvasHolderRef.current;
+
+
         //theoretically, we should always have a canvas here.
-        if( !canvas || !canvasHolder ) return;
+        if( !canvas ) return;
         
-        
-        
-        
-        console.log( 'initializing...' );
         const renderer = new THREE.WebGLRenderer({ preserveDrawingBuffer:true, antialias: true, canvas:canvas });
         
-        
-        
-        //renderer.domElement = canvas;
-        //canvasHolder.appendChild( renderer.domElement );
-        
-        
-        
-        const aspectRatio = props.project.aspectRatio;
-        
-        canvas.style.height = '100%'
-       canvas.style.width = '100%'
-
-        // const ctx = canvas.getContext( '2d' );
-
-        // if( !ctx )
-        // {
-        //     console.log(  "ctx is null!" );
-        //     return;
-        // }
-        // ctx.fillStyle= "#FF0000";
-        // ctx.fillRect( 1000,1000, 2000,2000 );
-        // ctx.stroke();
+        //canvas.style.height = '100%'
+        canvas.style.width = '100%'
         
         const initialWidth = canvas.clientWidth;
             
-        const calculatedHeight = props.project.aspectRatio ? (initialWidth/props.project.aspectRatio) : undefined;
+        const calculatedHeight = (initialWidth/props.project.aspectRatio);
         
 
-        console.log( canvas.clientWidth, calculatedHeight ?? canvas.clientHeight )
+        console.log( canvas.clientWidth, calculatedHeight )
         //renderer.setSize( canvas.clientWidth, calculatedHeight ?? canvas.clientHeight, false );
+        canvas.style.height = String(100);
 
-        props.project.render( renderer );
+
+
+        renderer.setSize( canvas.clientWidth, calculatedHeight, false );
+
+        const [ camera, scene ] = props.project.render( renderer );
         setRenderer( renderer );
-        
-
-        // TODO: hang onto the camera so it can be used with a separate renderer
+        setScene( scene );
+        setCamera( camera );
+        setAspectRatio( props.project.aspectRatio )
 
     }
+
+    const CanvasExportComponent = camera && renderer && aspectRatio ? <CanvasExport camera={camera} renderer={renderer} aspectRatio={aspectRatio} /> : <></>
 
     useEffect( initializationEffect );
 
     return (
         <div className="ThreeCanvas">
-            <ExportCanvasForm render={ dimensions => console.log( `render a ${dimensions.width}X${dimensions.height} diagram...` ) } />
-            <button onClick={() =>saveToPng}>Save to PNG</button>
-            <div className="ThreeCanvas.CanvasHolder" ref={canvasHolderRef} >
-                <canvas ref={canvasRef} />
-            </div>
+            <ExportCanvasForm render={ dimensions => {
+                console.log( `render a ${dimensions.width}X${dimensions.height} diagram...` );
+                const canvas = exportCanvasRef.current;
+                if( !canvas || !scene || !camera ) return;
+                let renderer = exportRenderer;
+                
+                if( !renderer ) {
+                    renderer = new THREE.WebGLRenderer( { preserveDrawingBuffer:true, antialias: true, canvas:canvas } )
+                    setExportRenderer( renderer );
+                }
 
-            Some other text
+                renderPng( renderer, scene, camera, dimensions.width, dimensions.height );
+                
+                } } />
+            <button onClick={() =>saveToPng}>Save to PNG</button>
+            <div className="ThreeCanvas.CanvasHolder" >
+                <canvas ref={canvasRef} />
+                <canvas ref={exportCanvasRef} />
+            </div>
+            {CanvasExportComponent}
         </div>
     );
 }

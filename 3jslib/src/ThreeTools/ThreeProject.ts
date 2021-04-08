@@ -6,18 +6,10 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 //import { Action1, Action2, Func0 } from '../Utils/functions';
 import * as Functions from '../Utils/functions';
 
-
-type FixedWidthAndHeight = { width:number, height:number }
-type FixedWidthAndAspectRatio = { width:number, aspectRatio:number }
-type FixedHeightAndAspectRatio = { width:number, aspectRatio:number }
-
-type FixedSize = FixedWidthAndHeight | FixedWidthAndAspectRatio | FixedHeightAndAspectRatio;
-type AspectRatio = { aspectRatio:number };
-
-type ThreeProjectSize = FixedSize | AspectRatio
+type BasicCamera = THREE.PerspectiveCamera | THREE.OrthographicCamera;
 
 
-type ThreeProjectAction = Functions.Action1<THREE.WebGLRenderer>;
+type ThreeProjectAction = Functions.Func1<THREE.WebGLRenderer,[BasicCamera,THREE.Scene]>;
 type ThreeSnapshot<TState> = {
   scene:THREE.Scene,
   camera:THREE.PerspectiveCamera,
@@ -28,9 +20,9 @@ type ThreeProjectBuilderFunction<TState> = ( renderer:THREE.WebGLRenderer ) => T
 
 
 class ThreeProject {
-  public constructor( private action:ThreeProjectAction, public aspectRatio:number | undefined ){}
+  public constructor( private action:ThreeProjectAction, public aspectRatio:number ){}
 
-  public render:( ( renderer:THREE.WebGLRenderer )=>void) = (x) => this.action( x )
+  public render:( ( renderer:THREE.WebGLRenderer )=>[BasicCamera,THREE.Scene]) = (x) => this.action( x )
 
   static initialize<TState>( func:Functions.Func0<ThreeSnapshot<TState>> ):ThreeProjectBuilder<TState> {
     return ThreeProjectBuilder.initialize<TState>(func);
@@ -42,7 +34,11 @@ class ThreeProjectBuilder<TState> {
   private constructor( private func:ThreeProjectBuilderFunction<TState> ) {}
 
   buildWithAspectRatio( aspectRatio:number ):ThreeProject {
-    return new ThreeProject( x => this.func(x), aspectRatio )
+    return new ThreeProject( x => 
+      {
+        const snapshot = this.func(x);
+        return [ snapshot.camera, snapshot.scene ];
+      }, aspectRatio )
   }
 
   static initialize<TState>( func:Functions.Func0<ThreeSnapshot<TState>> ) {

@@ -21,8 +21,6 @@ function ExportCanvasForm( props:propsType ) {
                 <strong>Export</strong>
                 <div>Width: <TextInput value={ widthText } textChanged={ setWidthText } /></div>
                 <div>Height: <TextInput value={ heightText } textChanged={ setHeightText } /></div>
-                {/* <div>Width: <input type="text" value={ input1Text } onChange={ (e) => setText( e.target.value ) } /></div> */}
-                {/* <div>Height: <input type="text" value={ input2Text } onChange={ (e) => setText2( e.target.value ) } /></div> */}
                 <div><button onClick={ () => props.render({ width:Number(widthText), height:Number(heightText) }) } >Save</button></div>
             </div>
         </>

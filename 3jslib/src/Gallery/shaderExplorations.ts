@@ -52,11 +52,10 @@ const project =
 } )
 .includeOrbitControls()
 .animate( (state,t) => {
-    console.log("frame");
      state.planeMesh.rotation.x +=0.01;
      state.planeMesh.rotation.y +=0.01;
   } )
 .handleCanvasResizing( ( state, newDimensions ) => state.handleResize( newDimensions.width, newDimensions.height ) )
-.buildWithAspectRatio( 1 )
+.buildWithAspectRatio( 2 )
 
 export default project;
